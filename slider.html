@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightbox Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #17242a;
+            background: #f5f7f5;
+        }
+
+        .gallery-section {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 48px 0 64px;
+        }
+
+        .gallery-header {
+            margin-bottom: 26px;
+        }
+
+        .gallery-header h1 {
+            margin: 0 0 8px;
+            font-size: clamp(32px, 5vw, 54px);
+            line-height: 1;
+        }
+
+        .gallery-header p {
+            max-width: 620px;
+            margin: 0;
+            color: #546168;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .slick-main-slider {
+            margin: 0 -10px;
+            padding: 0 26px 38px;
+        }
+
+        .gallery-slide {
+            padding: 0 10px;
+        }
+
+        .gallery-card {
+            width: 100%;
+            padding: 0;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: left;
+            border: 0;
+            border-radius: 8px;
+            background: #fff;
+            transition: transform 180ms ease;
+        }
+
+        .gallery-card:hover,
+        .gallery-card:focus-visible {
+            transform: translateY(-4px);
+            outline: none;
+        }
+
+        .gallery-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: #dde9e6;
+        }
+
+        .gallery-card span {
+            display: block;
+            padding: 14px 16px 16px;
+            color: #17242a;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .slick-prev,
+        .slick-next {
+            z-index: 2;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #17242a;
+        }
+
+        .slick-prev:hover,
+        .slick-prev:focus,
+        .slick-next:hover,
+        .slick-next:focus {
+            background: #0f8f8c;
+        }
+
+        .slick-prev:before,
+        .slick-next:before {
+            color: #fff;
+            font-size: 22px;
+            opacity: 1;
+        }
+
+        .slick-dots li button:before {
+            color: #0f8f8c;
+            font-size: 10px;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(9, 15, 18, 0.88);
+        }
+
+        .lightbox.is-open {
+            display: flex;
+        }
+
+        .lightbox-panel {
+            position: relative;
+            width: min(920px, 100%);
+        }
+
+        .lightbox-image {
+            display: block;
+            width: 100%;
+            max-height: 78vh;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .lightbox-caption {
+            margin: 14px 0 0;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .lightbox-button {
+            position: absolute;
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            cursor: pointer;
+            color: #fff;
+            border: 0;
+            border-radius: 50%;
+            background: #0f8f8c;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .lightbox-button:hover,
+        .lightbox-button:focus-visible {
+            background: #e46144;
+            outline: none;
+        }
+
+        .lightbox-close {
+            top: -54px;
+            right: 0;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .lightbox-prev {
+            left: -58px;
+        }
+
+        .lightbox-next {
+            right: -58px;
+        }
+
+        @media (max-width: 760px) {
+            .gallery-section {
+                width: min(100% - 20px, 1120px);
+                padding-top: 30px;
+            }
+
+            .slick-main-slider {
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+
+            .lightbox {
+                padding: 16px;
+            }
+
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+            }
+
+            .lightbox-prev,
+            .lightbox-next {
+                top: auto;
+                bottom: -58px;
+                transform: none;
+            }
+
+            .lightbox-prev {
+                left: calc(50% - 52px);
+            }
+
+            .lightbox-next {
+                right: calc(50% - 52px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="gallery-section">
+        <div class="gallery-header">
+            <h1>Lightbox Gallery</h1>
+            <p>Click any image to preview it in a larger gallery view.</p>
+        </div>
+
+        <div class="slick-main-slider">
+            <div class="gallery-slide">
+                <button class="gallery-card" type="button" data-title="Team Performance">
+                    <img src="image 1.png" alt="Illustration of a team standing together">
+                    <span>Team Performance</span>
+                </button>
+            </div>
+            <div class="gallery-slide">
+                <button class="gallery-card" type="button" data-title="Project Planning">
+                    <img src="image 1.png" alt="Illustration preview for project planning">
+                    <span>Project Planning</span>
+                </button>
+            </div>
+            <div class="gallery-slide">
+                <button class="gallery-card" type="button" data-title="People Operations">
+                    <img src="image 1.png" alt="Illustration preview for people operations">
+                    <span>People Operations</span>
+                </button>
+            </div>
+            <div class="gallery-slide">
+                <button class="gallery-card" type="button" data-title="Work Dashboard">
+                    <img src="image 1.png" alt="Illustration preview for a work dashboard">
+                    <span>Work Dashboard</span>
+                </button>
+            </div>
+            <div class="gallery-slide">
+                <button class="gallery-card" type="button" data-title="Team Review">
+                    <img src="image 1.png" alt="Illustration preview for team review">
+                    <span>Team Review</span>
+                </button>
+            </div>
+            <div class="gallery-slide">
+                <button class="gallery-card" type="button" data-title="Growth Report">
+                    <img src="image 1.png" alt="Illustration preview for growth report">
+                    <span>Growth Report</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+        <div class="lightbox-panel">
+            <button class="lightbox-button lightbox-close" type="button" aria-label="Close preview">&times;</button>
+            <button class="lightbox-button lightbox-prev" type="button" aria-label="Previous image">&#8249;</button>
+            <img class="lightbox-image" src="" alt="">
+            <p class="lightbox-caption"></p>
+            <button class="lightbox-button lightbox-next" type="button" aria-label="Next image">&#8250;</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var $cards = $('.gallery-card');
+            var $lightbox = $('#lightbox');
+            var $lightboxImage = $('.lightbox-image');
+            var $lightboxCaption = $('.lightbox-caption');
+            var $closeButton = $('.lightbox-close');
+            var currentIndex = 0;
+
+            $cards.each(function (index) {
+                $(this).attr('data-index', index);
+            });
+
+            function showImage(index) {
+                currentIndex = (index + $cards.length) % $cards.length;
+
+                var $card = $cards.eq(currentIndex);
+                var $image = $card.find('img');
+
+                $lightboxImage.attr({
+                    src: $image.attr('src'),
+                    alt: $image.attr('alt')
+                });
+                $lightboxCaption.text($card.data('title'));
+            }
+
+            function openLightbox(index) {
+                showImage(index);
+                $lightbox.addClass('is-open');
+                $('body').css('overflow', 'hidden');
+                $closeButton.trigger('focus');
+            }
+
+            function closeLightbox() {
+                $lightbox.removeClass('is-open');
+                $('body').css('overflow', '');
+                $cards.eq(currentIndex).trigger('focus');
+            }
+
+            $('.slick-main-slider').on('click', '.gallery-card', function () {
+                openLightbox(Number($(this).attr('data-index')));
+            });
+
+            $closeButton.on('click', closeLightbox);
+
+            $('.lightbox-prev').on('click', function () {
+                showImage(currentIndex - 1);
+            });
+
+            $('.lightbox-next').on('click', function () {
+                showImage(currentIndex + 1);
+            });
+
+            $lightbox.on('click', function (event) {
+                if ($(event.target).is($lightbox)) {
+                    closeLightbox();
+                }
+            });
+
+            $(document).on('keydown', function (event) {
+                if (!$lightbox.hasClass('is-open')) {
+                    return;
+                }
+
+                if (event.key === 'Escape') {
+                    closeLightbox();
+                }
+
+                if (event.key === 'ArrowLeft') {
+                    showImage(currentIndex - 1);
+                }
+
+                if (event.key === 'ArrowRight') {
+                    showImage(currentIndex + 1);
+                }
+            });
+
+            $('.slick-main-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    },
+                    {
+                        breakpoint: 700,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>
